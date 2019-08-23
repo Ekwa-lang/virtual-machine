@@ -1,6 +1,9 @@
-
+/**
+*	parser.c - Function of byte code parsing from binary
+*	sector.
+*/
 #include "ekwa.h"
-
+/*******************************************************/
 void
 ekwa_addinstructin(struct instruction **list,
 					struct instruction new)
@@ -28,7 +31,7 @@ ekwa_addinstructin(struct instruction **list,
 
 	ptr->next = one;
 }
-
+/*******************************************************/
 void
 ekwa_freeinstructions(struct instruction **list)
 {
@@ -47,7 +50,7 @@ ekwa_freeinstructions(struct instruction **list)
 
 	*list = NULL;
 }
-
+/*******************************************************/
 void
 ekwa_readbcode(FILE *fp, struct instruction **list)
 {

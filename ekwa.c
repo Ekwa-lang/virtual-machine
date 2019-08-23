@@ -3,7 +3,7 @@
 *	machine.
 */
 #include "ekwa.h"
-
+/*******************************************************/
 void
 ekwa_exit(unsigned char type)
 {
@@ -13,7 +13,7 @@ ekwa_exit(unsigned char type)
 #endif
 	exit(type);
 }
-
+/*******************************************************/
 void
 ekwa_setposition(FILE *fp)
 {
@@ -24,7 +24,7 @@ ekwa_setposition(FILE *fp)
 	fseek(fp, 0,  SEEK_END);
 	fseek(fp, -1, SEEK_CUR);
 }
-
+/*******************************************************/
 int
 main(int argc, char *args[])
 {
@@ -41,6 +41,7 @@ main(int argc, char *args[])
 	ekwa_setposition(fp);
 	ekwa_bcode = NULL;
 	ekwa_flags = NULL;
+	ekwa_vars  = NULL;
 
 	ekwa_readbcode(fp, &ekwa_bcode);
 	fclose(fp);

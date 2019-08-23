@@ -11,7 +11,7 @@
 #define u16_t	unsigned short int
 #define bool	unsigned char
 #define byte	unsigned char
-#define size_t	unsigned int
+//#define size_t	unsigned int
 /*
 *	Boolean values.
 */
@@ -29,6 +29,10 @@
 *	Struct of error table.
 */
 enum status_codes {
+	VAR_AEXISTS	= 0x11,
+	VAR_NAME	= 0x10,
+
+
 	BUFFER_SIZE	= 0x09,
 	BCODE_SIZE1	= 0x08,
 	BCODE_SIZE2	= 0x07,
@@ -99,10 +103,21 @@ struct flag {
 	char name[BUFFLEN + 1];
 	struct flag *next;
 };
-
+/**
+*	Struct of all program's vars.
+*/
+struct var {
+	char name[BUFFLEN + 1];
+	enum var_types type;
+	struct var *next;
+	void *ptr;
+};
+/**
+*	All global structs.
+*/
 struct instruction *ekwa_bcode;
 struct flag *ekwa_flags;
-
+struct var *ekwa_vars;
 
 void
 ekwa_readbcode(FILE *, struct instruction **);
@@ -118,3 +133,21 @@ ekwa_exit(unsigned char);
 
 void
 ekwa_set_flags(struct instruction *);
+
+void
+ekwa_new_var(struct var);
+
+bool
+ekwa_var_exists(char *);
+
+struct var *
+ekwa_var_find(char *);
+
+struct flag *
+ekwa_find_flag(char *);
+
+enum var_types
+ekwa_detect_type(byte *);
+
+void
+ekwa_token_var(struct instruction *);
