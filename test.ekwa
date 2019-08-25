@@ -1,2 +1,2 @@
-EKWA_SHOW	tmp_buffa	lol
-EKWA_VAR	test_var	EKWA_INT
+EKWA_VAR	test_var	EKWA_BYTES
+EKWA_VAL	test_var	Hello world!

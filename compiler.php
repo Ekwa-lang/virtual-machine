@@ -22,14 +22,15 @@ $tokens = array(
 	"EKWA_CAT"	=> "\x10",
 	"EKWA_OPT"	=> "\x11",
 	"EKWA_EXIT"	=> "\x12",
+	"EKWA_PBUF"	=> "\x13",
 
-	"EKWA_ADD"	=> "\x13",
-	"EKWA_SUB"	=> "\x14",
-	"EKWA_DIV"	=> "\x15",
-	"EKWA_MOD"	=> "\x16",
-	"EKWA_MUL"	=> "\x17",
+	"EKWA_ADD"	=> "\x14",
+	"EKWA_SUB"	=> "\x15",
+	"EKWA_DIV"	=> "\x16",
+	"EKWA_MOD"	=> "\x17",
+	"EKWA_MUL"	=> "\x18",
 
-	"EKWA_END"	=> "\x18"
+	"EKWA_END"	=> "\x19"
 );
 
 $types = array(
@@ -62,7 +63,7 @@ foreach ($lines as $line) {
 		continue;
 	}
 
-	$length = strlen($elements[1]); echo "\n\n" . $length . "\n\n";
+	$length = strlen($elements[1]);
 	$arr[$i]['len1'] = pack('n', $length);
 	$arr[$i]['arg1'] = $elements[1];
 
@@ -72,15 +73,16 @@ foreach ($lines as $line) {
 		//$bytecode .= "\x00\x00";
 		continue;
 	}
-/*
+
 	if (isset($types[$elements[2]])
 		&& $elements[0] == "EKWA_VAR") {
-		$bytecode .= "\x00\x01";
-		$bytecode .= $types[$elements[2]];
+		$arr[$i]['len2'] = "\x00\x01";
+		$arr[$i]['arg2'] = $types[$elements[2]];
 		$vars[$elements[1]] = $elements[2];
+		$i++;
 		continue;
 	}
-
+/*
 	if ($elements[0] == "EKWA_VAL") {
 		if ($vars[$elements[1]] == "EKWA_INT") {
 			$d_bytes = pack('i', (int)$elements[2]);
@@ -98,12 +100,12 @@ foreach ($lines as $line) {
 		}
 	}
 */
-	$length = strlen($elements[2]); echo $length . "\n\n\n";
+	$length = strlen($elements[2]);
 	$arr[$i]['len2'] = pack('n', $length);
 	$arr[$i]['arg2'] = (string)$elements[2];
 	$i++;
 }
-/*
+
 foreach ($arr as $one) {
 	echo "token: " . bin2hex($one['token']) . "\n";
 	echo "len1: " . bin2hex($one['len1']) . "\n";
@@ -123,7 +125,7 @@ foreach ($arr as $one) {
 
 	echo "arg2: " . $one['arg2'] . "\n\n\n";
 }
-*/
+
 $bcode = $tokens['EKWA_END'];
 
 for ($i = count($arr); $i != 0; $i--) {

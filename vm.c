@@ -8,6 +8,7 @@ void
 ekwa_startexec(struct instruction *list)
 {
 	struct instruction *c_list = list;
+	struct var buff;
 
 	if (!list || list == NULL) {
 		ekwa_exit(ERROR_BCODE);
@@ -21,10 +22,21 @@ ekwa_startexec(struct instruction *list)
 			ekwa_token_var(c_list);
 			break;
 
-		case EKWA_SHOW:
-			//ekwa_token_show();
+		case EKWA_VAL:
+			ekwa_token_setval(c_list);
 			break;
 
+		case EKWA_BUFF:
+			ekwa_token_buffer(c_list, &buff);
+			break;
+
+		case EKWA_WRT:
+			ekwa_token_wrt(c_list, &buff);
+			break;
+
+		case EKWA_PBUF:
+			ekwa_token_buffptr(c_list, &buff);
+			break;
 		}
 
 		c_list = c_list->next;
@@ -81,8 +93,9 @@ ekwa_new_var(struct var new)
 	size_t size = sizeof(struct var);
 	struct var *one;
 
-	if (ekwa_var_exists(new.name))
+	if (ekwa_var_exists(new.name)) {
 		ekwa_exit(VAR_AEXISTS);
+	}
 
 	one = (struct var *)malloc(size);
 	memcpy(one, &new, size);

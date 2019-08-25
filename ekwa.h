@@ -67,15 +67,16 @@ enum tokens {
 	EKWA_CAT	= 0x10, // Concatenation.
 	EKWA_OPT	= 0x11, // Set/reset vm options.
 	EKWA_EXIT	= 0x12, // Stop script.
+	EKWA_PBUF	= 0x13, // Write pointer to buffer.
 
 	/* Arithmetic operations */
-	EKWA_ADD	= 0x13,
-	EKWA_SUB	= 0x14,
-	EKWA_DIV	= 0x15,
-	EKWA_MOD	= 0x16,
-	EKWA_MUL	= 0x17,
+	EKWA_ADD	= 0x14,
+	EKWA_SUB	= 0x15,
+	EKWA_DIV	= 0x16,
+	EKWA_MOD	= 0x17,
+	EKWA_MUL	= 0x18,
 
-	EKWA_END	= 0x18
+	EKWA_END	= 0x19
 };
 /**
 *	Available types of vars.
@@ -90,7 +91,7 @@ enum var_types {
 *	Struct of instructions list.
 */
 struct instruction {
-	byte arg1[BUFFLEN],  arg2[BUFFLEN];
+	byte arg1[BUFFLEN], arg2[BUFFLEN];
 	struct instruction *next;
 	enum tokens token;
 	u16_t len1, len2;
@@ -110,6 +111,7 @@ struct var {
 	char name[BUFFLEN + 1];
 	enum var_types type;
 	struct var *next;
+	size_t length;
 	void *ptr;
 };
 /**
@@ -151,3 +153,18 @@ ekwa_detect_type(byte *);
 
 void
 ekwa_token_var(struct instruction *);
+
+void
+ekwa_token_setval(struct instruction *);
+
+void
+ekwa_token_wrt(struct instruction *,
+				struct var *);
+
+void
+ekwa_token_buffer(struct instruction *,
+				struct var *);
+
+void
+ekwa_token_buffptr(struct instruction *,
+				struct var *);
