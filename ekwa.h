@@ -31,7 +31,7 @@
 enum status_codes {
 	VAR_AEXISTS	= 0x11,
 	VAR_NAME	= 0x10,
-
+	VAR_NVALUE	= 0x12,
 
 	BUFFER_SIZE	= 0x09,
 	BCODE_SIZE1	= 0x08,
@@ -84,8 +84,7 @@ enum tokens {
 enum var_types {
 	EKWA_BYTES	= 0x00,
 	EKWA_FLOAT	= 0x01,
-	EKWA_INT	= 0x02,
-	EKWA_PTR	= 0x03
+	EKWA_INT	= 0x02
 };
 /**
 *	Struct of instructions list.
@@ -168,3 +167,15 @@ ekwa_token_buffer(struct instruction *,
 void
 ekwa_token_buffptr(struct instruction *,
 				struct var *);
+
+void
+ekwa_token_jump(struct instruction **);
+
+void
+ekwa_var_remove(char *);
+
+void
+ekwa_token_remove_var(struct instruction *);
+
+void
+ekwa_token_equal(struct instruction **, bool);

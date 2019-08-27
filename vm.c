@@ -7,7 +7,7 @@
 void
 ekwa_startexec(struct instruction *list)
 {
-	struct instruction *c_list = list;
+	struct instruction *node = list;
 	struct var buff;
 
 	if (!list || list == NULL) {
@@ -16,30 +16,49 @@ ekwa_startexec(struct instruction *list)
 
 	ekwa_set_flags(list);
 
-	while (c_list && c_list != NULL) {
-		switch (c_list->token) {
+	while (node && node != NULL) {
+		switch (node->token) {
+		case EKWA_BUFF:
+			ekwa_token_buffer(node, &buff);
+			break;
+
 		case EKWA_VAR:
-			ekwa_token_var(c_list);
+			ekwa_token_var(node);
 			break;
 
 		case EKWA_VAL:
-			ekwa_token_setval(c_list);
-			break;
-
-		case EKWA_BUFF:
-			ekwa_token_buffer(c_list, &buff);
+			ekwa_token_setval(node);
 			break;
 
 		case EKWA_WRT:
-			ekwa_token_wrt(c_list, &buff);
+			ekwa_token_wrt(node, &buff);
 			break;
 
 		case EKWA_PBUF:
-			ekwa_token_buffptr(c_list, &buff);
+			ekwa_token_buffptr(node, &buff);
 			break;
+
+		case EKWA_JMP:
+			ekwa_token_jump(&node);
+			break;
+
+		case EKWA_RMV:
+			ekwa_token_remove_var(node);
+			break;
+
+		case EKWA_IFE:
+			ekwa_token_equal(&node, true);
+			break;
+
+		case EKWA_IFNE:
+			ekwa_token_equal(&node, false);
+			break;
+
+		case EKWA_EXIT:
+			ekwa_exit(SUCCESS);
 		}
 
-		c_list = c_list->next;
+		node = node->next;
 	}
 }
 /*******************************************************/
@@ -130,8 +149,8 @@ ekwa_set_flags(struct instruction *list)
 		strncpy(new->name, ptr->arg1,
 				ptr->len1);
 
-		new->point = ptr->next;
 		new->next = ekwa_flags;
+		new->point = ptr;
 		ekwa_flags = new;
 
 		ptr = ptr->next;
@@ -162,9 +181,46 @@ ekwa_find_flag(char *name)
 enum var_types
 ekwa_detect_type(byte *buffer)
 {
-	if (buffer[0] > EKWA_PTR) {
+	if (!buffer || buffer[0] > EKWA_INT) {
 		return EKWA_BYTES;
 	}
 
 	return (enum var_types)buffer[0];
+}
+/*******************************************************/
+void
+ekwa_var_remove(char *name)
+{
+	struct var *ptr = ekwa_vars, *buff;
+
+	if (!name || name == NULL) {
+		ekwa_exit(VAR_NAME);
+	}
+
+	if (!ekwa_vars || ekwa_vars == NULL) {
+		return;
+	}
+
+	if (strcmp(name, ptr->name) == 0) {
+		buff = ekwa_vars;
+		ekwa_vars = ekwa_vars->next;
+
+		free(buff);
+		return;
+	}
+
+	while (ptr->next && ptr->next != NULL) {
+		if (strcmp(ptr->next->name, name) != 0) {
+			ptr = ptr->next;
+			continue;
+		}
+
+		buff = ptr->next;
+		ptr->next = ptr->next->next;
+
+		free(buff);
+		return;
+	}
+
+	ekwa_exit(VAR_NAME);
 }
