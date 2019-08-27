@@ -26,12 +26,17 @@
 */
 #define BUFFLEN 65535
 /**
+*	Runtime current version.
+*/
+#define RUNTIME_INFO "Ekwa runtime 0.2\n"
+/**
 *	Struct of error table.
 */
 enum status_codes {
 	VAR_AEXISTS	= 0x11,
 	VAR_NAME	= 0x10,
 	VAR_NVALUE	= 0x12,
+	VAR_CMPTYPE	= 0x13,
 
 	BUFFER_SIZE	= 0x09,
 	BCODE_SIZE1	= 0x08,
@@ -75,8 +80,10 @@ enum tokens {
 	EKWA_DIV	= 0x16,
 	EKWA_MOD	= 0x17,
 	EKWA_MUL	= 0x18,
+	EKWA_SAL	= 0x19,
+	EKWA_SAR	= 0x20,
 
-	EKWA_END	= 0x19
+	EKWA_END	= 0x21
 };
 /**
 *	Available types of vars.
@@ -179,3 +186,14 @@ ekwa_token_remove_var(struct instruction *);
 
 void
 ekwa_token_equal(struct instruction **, bool);
+
+void
+ekwa_token_ifsmall_big(struct instruction **,
+					bool);
+
+void
+ekwa_token_show(struct instruction *);
+
+void
+ekwa_token_concat(struct instruction *,
+				struct var *);

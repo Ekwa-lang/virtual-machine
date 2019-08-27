@@ -1,5 +1,6 @@
-
-#include "ekwa.h"
-/*
-	Here will be standart functions for ekwa.
+/**
+*	stdlib.c - Here declared functions of standard library
+*	for usage in Ekwa source code.
 */
+#include "ekwa.h"
+/*******************************************************/

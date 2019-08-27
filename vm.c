@@ -15,6 +15,7 @@ ekwa_startexec(struct instruction *list)
 	}
 
 	ekwa_set_flags(list);
+	buff.ptr = NULL;
 
 	while (node && node != NULL) {
 		switch (node->token) {
@@ -46,12 +47,32 @@ ekwa_startexec(struct instruction *list)
 			ekwa_token_remove_var(node);
 			break;
 
+		case EKWA_IFB:
+			ekwa_token_ifsmall_big(&node, false);
+			break;
+
+		case EKWA_IFS:
+			ekwa_token_ifsmall_big(&node, true);
+			break;
+
 		case EKWA_IFE:
 			ekwa_token_equal(&node, true);
 			break;
 
 		case EKWA_IFNE:
 			ekwa_token_equal(&node, false);
+			break;
+
+		case EKWA_SHOW:
+			ekwa_token_show(node);
+			break;
+
+		case EKWA_CAT:
+			ekwa_token_concat(node, &buff);
+			break;
+
+		case EKWA_INFO:
+			printf(RUNTIME_INFO);
 			break;
 
 		case EKWA_EXIT:

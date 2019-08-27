@@ -29,8 +29,10 @@ $tokens = array(
 	"EKWA_DIV"	=> "\x16",
 	"EKWA_MOD"	=> "\x17",
 	"EKWA_MUL"	=> "\x18",
+	"EKWA_SAL"	=> "\x19",
+	"EKWA_SAR"	=> "\x20",
 
-	"EKWA_END"	=> "\x19"
+	"EKWA_END"	=> "\x21"
 );
 
 $types = array(
@@ -131,6 +133,9 @@ $bcode = $tokens['EKWA_END'];
 for ($i = count($arr); $i != 0; $i--) {
 	if (isset($arr[$i - 1]['arg2']) && strlen($arr[$i - 1]['arg2']) > 0) {
 		$bcode .= $arr[$i - 1]['arg2'] . $arr[$i - 1]['len2'];
+	}
+	else {
+		$bcode .= $arr[$i - 1]['len2'];
 	}
 
 	if (isset($arr[$i - 1]['arg1']) && strlen($arr[$i - 1]['arg1']) > 0) {
