@@ -11,7 +11,7 @@ ekwa_token_var(struct instruction *ptr)
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| ptr->len2 != 1) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_var");
 	}
 
 	memset(new.name, 0x00, BUFFLEN + 1);
@@ -31,7 +31,7 @@ ekwa_token_setval(struct instruction *ptr)
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| ptr->len2 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_setval");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -40,7 +40,7 @@ ekwa_token_setval(struct instruction *ptr)
 	c_var = ekwa_var_find(name);
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_setval");
 	}
 
 	if (c_var->ptr != NULL) {
@@ -48,7 +48,7 @@ ekwa_token_setval(struct instruction *ptr)
 	}
 
 	if (!(c_var->ptr = malloc(ptr->len2 + 1))) {
-		ekwa_exit(MEM_ALLOC);
+		ekwa_exit(MEM_ALLOC, "token_setval");
 	}
 
 	memset(c_var->ptr, 0x00, ptr->len2  + 1);
@@ -65,7 +65,7 @@ ekwa_token_buffer(struct instruction *ptr,
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| !buff) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_buffer");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -74,7 +74,7 @@ ekwa_token_buffer(struct instruction *ptr,
 	c_var = ekwa_var_find(name);
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_buffer");
 	}
 
 	if (buff->ptr != NULL) {
@@ -82,7 +82,7 @@ ekwa_token_buffer(struct instruction *ptr,
 	}
 
 	if (!(buff->ptr = malloc(c_var->length + 1))) {
-		ekwa_exit(MEM_ALLOC);
+		ekwa_exit(MEM_ALLOC, "token_buffer");
 	}
 
 	memcpy(buff->ptr, c_var->ptr, c_var->length);
@@ -98,7 +98,7 @@ ekwa_token_wrt(struct instruction *ptr,
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| !buff) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_wrt");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -107,7 +107,7 @@ ekwa_token_wrt(struct instruction *ptr,
 	c_var = ekwa_var_find(name);
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_wrt");
 	}
 
 	if (c_var->ptr != NULL) {
@@ -130,7 +130,7 @@ ekwa_token_buffptr(struct instruction *ptr,
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| !buff) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_buffptr");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -139,7 +139,7 @@ ekwa_token_buffptr(struct instruction *ptr,
 	c_var = ekwa_var_find(name);
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_buffptr");
 	}
 
 	buff->length = c_var->length;
@@ -154,7 +154,7 @@ ekwa_token_jump(struct instruction **ptr)
 
 	if (!(*ptr) || (*ptr) == NULL
 		|| (*ptr)->len1 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_jump");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -175,7 +175,7 @@ ekwa_token_remove_var(struct instruction *ptr)
 	char name[BUFFLEN + 1];
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_remove_var");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -190,7 +190,7 @@ ekwa_equal_int(struct var *v1, struct var *v2)
 	int var_1, var_2;
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "equal_int");
 	}
 
 	memcpy(&var_1, v1->ptr, sizeof(int));
@@ -205,7 +205,7 @@ ekwa_equal_float(struct var *v1, struct var *v2)
 	float var_1, var_2;
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "equal_float");
 	}
 
 	memcpy(&var_1, v1->ptr, sizeof(float));
@@ -220,7 +220,7 @@ ekwa_equal_bytes(struct var *v1, struct var *v2)
 	char *var_1, *var_2;
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "equal_bytes");
 	}
 
 	if (v1->length != v2->length) {
@@ -243,7 +243,7 @@ ekwa_token_equal(struct instruction **node, bool eq)
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| ptr->len2 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_equal");
 	}
 
 	memset(name1, 0x00, BUFFLEN + 1);
@@ -256,11 +256,11 @@ ekwa_token_equal(struct instruction **node, bool eq)
 	v2 = ekwa_var_find(name2);
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_equal");
 	}
 
 	if (v1->ptr == NULL || v2->ptr == NULL) {
-		ekwa_exit(VAR_NVALUE);
+		ekwa_exit(VAR_NVALUE, "token_equal");
 	}
 
 	if (v1->type != v2->type) {
@@ -303,7 +303,7 @@ ekwa_smaller_int(struct var *v1, struct var *v2)
 	int var_1, var_2;
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "smaller_int");
 	}
 
 	memcpy(&var_1, v1->ptr, sizeof(int));
@@ -318,7 +318,7 @@ ekwa_smaller_float(struct var *v1, struct var *v2)
 	float var_1, var_2;
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "smaller_float");
 	}
 
 	memcpy(&var_1, v1->ptr, sizeof(float));
@@ -331,7 +331,7 @@ bool
 ekwa_smaller_bytes(struct var *v1, struct var *v2)
 {
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "smaller_bytes");
 	}
 
 	return v1->length < v2->length;
@@ -348,7 +348,7 @@ ekwa_token_ifsmall_big(struct instruction **node,
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| ptr->len2 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_ifsmall_big");
 	}
 
 	memset(name1, 0x00, BUFFLEN + 1);
@@ -361,15 +361,15 @@ ekwa_token_ifsmall_big(struct instruction **node,
 	v2 = ekwa_var_find(name2);
 
 	if (v1 == NULL || v2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_ifsmall_big");
 	}
 
 	if (v1->ptr == NULL || v2->ptr == NULL) {
-		ekwa_exit(VAR_NVALUE);
+		ekwa_exit(VAR_NVALUE, "token_ifsmall_big");
 	}
 
 	if (v1->type != v2->type) {
-		ekwa_exit(VAR_CMPTYPE);
+		ekwa_exit(VAR_CMPTYPE, "token_ifsmall_big");
 		return;
 	}
 
@@ -411,7 +411,7 @@ ekwa_print_intfloat(struct var *c_var)
 	int v_int;
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "print_intfloat");
 	}
 
 	memset(buffer, 0x00, BUFFLEN + 1);
@@ -435,7 +435,7 @@ ekwa_token_show(struct instruction *ptr)
 	struct var *c_var;
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_show");
 	}
 
 	memset(name, 0x00, BUFFLEN + 1);
@@ -444,7 +444,7 @@ ekwa_token_show(struct instruction *ptr)
 	c_var = ekwa_var_find(name);
 
 	if (c_var == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_show");
 	}
 
 	if (c_var->length == 0) {
@@ -459,7 +459,7 @@ ekwa_token_show(struct instruction *ptr)
 	buff = (char *)malloc(c_var->length + 1);
 
 	if (!buff) {
-		ekwa_exit(MEM_ALLOC);
+		ekwa_exit(MEM_ALLOC, "token_show");
 	}
 
 	memset(buff, 0x00, c_var->length + 1);
@@ -479,7 +479,7 @@ ekwa_token_concat(struct instruction *ptr,
 
 	if (!ptr || ptr == NULL || ptr->len1 == 0
 		|| ptr->len2 == 0 || !buff) {
-		ekwa_exit(TOKEN_ARGS);
+		ekwa_exit(TOKEN_ARGS, "token_concat");
 	}
 
 	memset(name1, 0x00, BUFFLEN + 1);
@@ -499,13 +499,13 @@ ekwa_token_concat(struct instruction *ptr,
 	buff->ptr = malloc(len + 1);
 
 	if (!buff->ptr) {
-		ekwa_exit(MEM_ALLOC);
+		ekwa_exit(MEM_ALLOC, "token_concat");
 	}
 
 	memset(buff->ptr, 0x00, len + 1);
 
 	if (var_1 == NULL || var_2 == NULL) {
-		ekwa_exit(VAR_SEARCH);
+		ekwa_exit(VAR_SEARCH, "token_concat");
 	}
 
 	memcpy(buff->ptr, var_1->ptr, var_1->length);
@@ -514,3 +514,109 @@ ekwa_token_concat(struct instruction *ptr,
 
 	buff->length = len;
 }
+/*******************************************************/
+void
+ekwa_token_sal_sar(struct instruction *ptr, bool sal)
+{
+	char name1[BUFFLEN + 1], name2[BUFFLEN + 1];
+	struct var *var_1, *var_2;
+	byte data;
+	int num;
+
+	if (!ptr || ptr == NULL || ptr->len1 == 0
+		|| ptr->len2 == 0) {
+		ekwa_exit(TOKEN_ARGS, "token_sal_sar");
+	}
+
+	memset(name1, 0x00, BUFFLEN + 1);
+	memset(name2, 0x00, BUFFLEN + 1);
+
+	strncpy(name1, ptr->arg1, ptr->len1);
+	strncpy(name2, ptr->arg2, ptr->len2);
+
+	var_1 = ekwa_var_find(name1);
+	var_2 = ekwa_var_find(name2);
+
+	if (var_1 == NULL || var_2 == NULL) {
+		ekwa_exit(VAR_SEARCH, "token_sal_sar");
+	}
+
+	if (var_2->type != EKWA_INT || var_1->length == 0
+		|| var_1->type != EKWA_BYTES
+		|| var_2->length == 0) {
+		return;
+	}
+
+	memcpy(&data, var_1->ptr, sizeof(byte));
+	memcpy(&num, var_2->ptr, sizeof(int));
+
+	data = (sal) ? data << num : data >> num;
+	memset(var_1->ptr, data, 1);
+}
+/*******************************************************/
+void
+ekwa_token_add_argument(struct instruction *ptr)
+{
+	char name[BUFFLEN + 1];
+	struct var *var_f;
+	struct arg new;
+
+	if (!ptr || ptr == NULL || ptr->len1 == 0) {
+		ekwa_exit(TOKEN_ARGS, "token_add_argument");
+	}
+
+	memset(name, 0x00, BUFFLEN + 1);
+
+	strncpy(name, ptr->arg1, ptr->len1);
+	var_f = ekwa_var_find(name);
+	new.link = false;
+
+	if (var_f == NULL) {
+		ekwa_exit(VAR_SEARCH, "token_add_argument");
+	}
+
+	if (var_f->length == 0) {
+		new.ptr = NULL;
+		ekwa_args_add(new);
+		return;
+	}
+
+	new.ptr = malloc(var_f->length + 1);
+	new.length = var_f->length;
+
+	memcpy(new.ptr, var_f->ptr, new.length);
+	ekwa_args_add(new);
+}
+/*******************************************************/
+void
+ekwa_token_add_linkedarg(struct instruction *ptr)
+{
+	char name[BUFFLEN + 1];
+	struct var *var_f;
+	struct arg new;
+
+	if (!ptr || ptr == NULL || ptr->len1 == 0) {
+		ekwa_exit(TOKEN_ARGS, "token_add_linkedarg");
+	}
+
+	memset(name, 0x00, BUFFLEN + 1);
+
+	strncpy(name, ptr->arg1, ptr->len1);
+	var_f = ekwa_var_find(name);
+	new.link = true;
+
+	if (var_f == NULL) {
+		ekwa_exit(VAR_SEARCH, "token_add_linkedarg");
+	}
+
+	if (var_f->length == 0) {
+		new.ptr = NULL;
+		ekwa_args_add(new);
+		return;
+	}
+
+	new.length = var_f->length;
+	new.ptr = var_f->ptr;
+	ekwa_args_add(new);
+}
+//fdlopen

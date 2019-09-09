@@ -14,7 +14,7 @@ ekwa_addinstructin(struct instruction **list,
 	one = (struct instruction *)malloc(size);
 
 	if (!one) {
-		ekwa_exit(MEM_ALLOC);
+		ekwa_exit(MEM_ALLOC, "addinstructin");
 	}
 
 	memcpy(one, &new, size);
@@ -60,7 +60,7 @@ ekwa_readbcode(FILE *fp, struct instruction **list)
 	byte token;
 
 	if (!fp || (*list) != NULL) {
-		ekwa_exit(ERROR_BCODE);
+		ekwa_exit(ERROR_BCODE, "readbcode");
 	}
 
 	while (true) {
@@ -80,7 +80,7 @@ ekwa_readbcode(FILE *fp, struct instruction **list)
 		line.len1 = len;
 
 		if (len > BUFFLEN) {
-			ekwa_exit(BCODE_SIZE1);
+			ekwa_exit(BCODE_SIZE1, "readbcode");
 		}
 
 		if (len == 0x00) {
@@ -99,7 +99,7 @@ ekwa_readbcode(FILE *fp, struct instruction **list)
 		line.len2 = len;
 
 		if (len > BUFFLEN) {
-			ekwa_exit(BCODE_SIZE2);
+			ekwa_exit(BCODE_SIZE2, "readbcode");
 		}
 		
 		if (len == 0x00) {

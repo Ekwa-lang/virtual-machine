@@ -5,6 +5,7 @@ EKWA_VAL	test_var	Hello world!
 EKWA_VAR	vava_var	EKWA_BYTES
 EKWA_VAL	vava_var	Hello world!
 
+EKWA_INFO
 
 EKWA_IFE	test_var	vava_var
 EKWA_SHOW	test_var

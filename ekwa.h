@@ -2,9 +2,12 @@
 *	ekwa.h - Here declared all structc and
 *	public functions of virtual machine.
 */
+#ifndef EKWA_LANGUAGE
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <dlfcn.h>
 /*
 *	Custom types.
 */
@@ -57,7 +60,7 @@ enum tokens {
 	EKWA_VAR	= 0x01, // New var.
 	EKWA_BUFF	= 0x02, // Write to buffer.
 	EKWA_ARG	= 0x03, // Argument for function.
-	EKWA_CALL	= 0x04, // Call system function.
+	EKWA_CALL	= 0x04, // Call function from lib.
 	EKWA_JMP	= 0x05, // Jump to flag.
 	EKWA_FSET	= 0x06, // Set flag for jumping.
 	EKWA_WRT	= 0x07, // Write from buffer to var.
@@ -73,17 +76,19 @@ enum tokens {
 	EKWA_OPT	= 0x11, // Set/reset vm options.
 	EKWA_EXIT	= 0x12, // Stop script.
 	EKWA_PBUF	= 0x13, // Write pointer to buffer.
+	EKWA_ARGL	= 0x14, // Argument for function as a link.
+	EKWA_STD	= 0x15, // Call standard function.
 
 	/* Arithmetic operations */
-	EKWA_ADD	= 0x14,
-	EKWA_SUB	= 0x15,
-	EKWA_DIV	= 0x16,
-	EKWA_MOD	= 0x17,
-	EKWA_MUL	= 0x18,
-	EKWA_SAL	= 0x19,
-	EKWA_SAR	= 0x20,
+	EKWA_ADD	= 0x16,
+	EKWA_SUB	= 0x17,
+	EKWA_DIV	= 0x18,
+	EKWA_MOD	= 0x19,
+	EKWA_MUL	= 0x20,
+	EKWA_SAL	= 0x21,
+	EKWA_SAR	= 0x22,
 
-	EKWA_END	= 0x21
+	EKWA_END	= 0x23
 };
 /**
 *	Available types of vars.
@@ -120,12 +125,21 @@ struct var {
 	size_t length;
 	void *ptr;
 };
+
+struct arg {
+	enum var_types type;
+	size_t length;
+	void *ptr;
+	bool link;
+	struct arg *next;
+};
 /**
 *	All global structs.
 */
 struct instruction *ekwa_bcode;
 struct flag *ekwa_flags;
 struct var *ekwa_vars;
+struct arg *ekwa_args;
 
 void
 ekwa_readbcode(FILE *, struct instruction **);
@@ -137,7 +151,7 @@ void
 ekwa_startexec(struct instruction *);
 
 void
-ekwa_exit(unsigned char);
+ekwa_exit(unsigned char, char *);
 
 void
 ekwa_set_flags(struct instruction *);
@@ -197,3 +211,21 @@ ekwa_token_show(struct instruction *);
 void
 ekwa_token_concat(struct instruction *,
 				struct var *);
+
+void
+ekwa_token_sal_sar(struct instruction *, bool);
+
+void
+ekwa_token_call(struct instruction *,
+				struct var *);
+
+void
+ekwa_args_add(struct arg);
+
+void
+ekwa_token_add_argument(struct instruction *);
+
+void
+ekwa_token_add_linkedarg(struct instruction *);
+
+#endif

@@ -11,7 +11,7 @@ ekwa_startexec(struct instruction *list)
 	struct var buff;
 
 	if (!list || list == NULL) {
-		ekwa_exit(ERROR_BCODE);
+		ekwa_exit(ERROR_BCODE, "startexec");
 	}
 
 	ekwa_set_flags(list);
@@ -75,8 +75,28 @@ ekwa_startexec(struct instruction *list)
 			printf(RUNTIME_INFO);
 			break;
 
+		case EKWA_SAL:
+			ekwa_token_sal_sar(node, true);
+			break;
+
+		case EKWA_SAR:
+			ekwa_token_sal_sar(node, false);
+			break;
+
+		case EKWA_ARG:
+			ekwa_token_add_argument(node);
+			break;
+
+		case EKWA_ARGL:
+			ekwa_token_add_linkedarg(node);
+			break;
+
+		//case EKWA_CALL:
+		//	ekwa_token_call(node, &buff);
+		//	break;
+
 		case EKWA_EXIT:
-			ekwa_exit(SUCCESS);
+			ekwa_exit(SUCCESS, "startexec");
 		}
 
 		node = node->next;
@@ -89,7 +109,7 @@ ekwa_var_find(char *name)
 	struct var *ptr = ekwa_vars;
 
 	if (!name || strlen(name) == 0) {
-		ekwa_exit(VAR_NAME);
+		ekwa_exit(VAR_NAME, "var_find");
 	}
 
 	while (ptr && ptr != NULL) {
@@ -111,7 +131,7 @@ ekwa_var_exists(char *name)
 	bool status = false;
 
 	if (!name || strlen(name) == 0) {
-		ekwa_exit(VAR_NAME);
+		ekwa_exit(VAR_NAME, "var_exists");
 	}
 
 	while (ptr && ptr != NULL) {
@@ -134,10 +154,15 @@ ekwa_new_var(struct var new)
 	struct var *one;
 
 	if (ekwa_var_exists(new.name)) {
-		ekwa_exit(VAR_AEXISTS);
+		ekwa_exit(VAR_AEXISTS, "new_var");
 	}
 
 	one = (struct var *)malloc(size);
+
+	if (!one) {
+		ekwa_exit(MEM_ALLOC, "new_var");
+	}
+
 	memcpy(one, &new, size);
 
 	one->next = ekwa_vars;
@@ -149,6 +174,7 @@ ekwa_set_flags(struct instruction *list)
 {
 	size_t size = sizeof(struct flag);
 	struct instruction *ptr = list;
+	size_t len = ptr->len1;
 	struct flag *new;
 
 	while (ptr && ptr != NULL) {
@@ -157,19 +183,17 @@ ekwa_set_flags(struct instruction *list)
 			continue;
 		}
 
-		if (ptr->len1 == 0) {
-			ekwa_exit(TOKEN_ARGS);
+		if (len == 0) {
+			ekwa_exit(TOKEN_ARGS, "set_flags");
 		}
 
 		new = (struct flag *)malloc(size);
 
 		if (!new) {
-			ekwa_exit(MEM_ALLOC);
+			ekwa_exit(MEM_ALLOC, "set_flags");
 		}
 
-		strncpy(new->name, ptr->arg1,
-				ptr->len1);
-
+		strncpy(new->name, ptr->arg1, len);
 		new->next = ekwa_flags;
 		new->point = ptr;
 		ekwa_flags = new;
@@ -215,7 +239,7 @@ ekwa_var_remove(char *name)
 	struct var *ptr = ekwa_vars, *buff;
 
 	if (!name || name == NULL) {
-		ekwa_exit(VAR_NAME);
+		ekwa_exit(VAR_NAME, "var_remove");
 	}
 
 	if (!ekwa_vars || ekwa_vars == NULL) {
@@ -243,5 +267,32 @@ ekwa_var_remove(char *name)
 		return;
 	}
 
-	ekwa_exit(VAR_NAME);
+	ekwa_exit(VAR_NAME, "var_remove");
+}
+/*******************************************************/
+void
+ekwa_args_add(struct arg new)
+{
+	struct arg *one, *buff = ekwa_args;
+	size_t size = sizeof(struct arg);
+
+	one = (struct arg *)malloc(size);
+
+	if (!one) {
+		ekwa_exit(MEM_ALLOC, "args_add");
+	}
+
+	memcpy(one, &new, size);
+	one->next = NULL;
+
+	if (ekwa_args == NULL) {
+		ekwa_args = one;
+		return;
+	}
+
+	while (buff->next && buff->next != NULL) {
+		buff = buff->next;
+	}
+
+	buff->next = one;
 }

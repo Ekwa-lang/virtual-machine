@@ -23,16 +23,18 @@ $tokens = array(
 	"EKWA_OPT"	=> "\x11",
 	"EKWA_EXIT"	=> "\x12",
 	"EKWA_PBUF"	=> "\x13",
+	"EKWA_ARGL"	=> "\x14",
+	"EKWA_STD"	=> "\x15",
 
-	"EKWA_ADD"	=> "\x14",
-	"EKWA_SUB"	=> "\x15",
-	"EKWA_DIV"	=> "\x16",
-	"EKWA_MOD"	=> "\x17",
-	"EKWA_MUL"	=> "\x18",
-	"EKWA_SAL"	=> "\x19",
-	"EKWA_SAR"	=> "\x20",
+	"EKWA_ADD"	=> "\x16",
+	"EKWA_SUB"	=> "\x17",
+	"EKWA_DIV"	=> "\x18",
+	"EKWA_MOD"	=> "\x19",
+	"EKWA_MUL"	=> "\x20",
+	"EKWA_SAL"	=> "\x21",
+	"EKWA_SAR"	=> "\x22",
 
-	"EKWA_END"	=> "\x21"
+	"EKWA_END"	=> "\x23"
 );
 
 $types = array(
